@@ -1,68 +1,61 @@
-function sportsRegistration() {
-    // Datos simulados de estudiantes registrados y actividades deportivas
-    const students = [
-        { code: "12345", career: "Ingeniería" },
-        { code: "67890", career: "Medicina" },
-        { code: "11223", career: "Derecho" }
-    ];
+const estudiantes = ['12345', '12369', '15489'];
+const carreras = ['Ingeniería', 'Marketing Digital', 'Veterinaria', 'Medicina', 'Enfermería', 'Derecho'];
 
-    const sports = {
-        "Fútbol": { semester: 1, availableSlots: 5 },
-        "Baloncesto": { semester: 2, availableSlots: 3 },
-        "Natación": { semester: 3, availableSlots: 2 },
-        "Tenis": { semester: 1, availableSlots: 0 }
-    };
+const actividades = {
+    'Fútbol': { semestre: 1, cupos: 10 },
+    'Baloncesto': { semestre: 2, cupos: 5 },
+    'Volleyball': { semestre: 1, cupos: 8 },
+};
 
-    while (true) {
-        // Solicitar información del estudiante
-        let studentCode = prompt("Ingrese su código de estudiante:");
-        let career = prompt("Ingrese su carrera:");
-        
-        // Validar si el estudiante está registrado y pertenece a la carrera
-        let student = students.find(s => s.code === studentCode && s.career.toLowerCase() === career.toLowerCase());
-        
-        if (!student) {
-            console.log("El estudiante no está registrado o no pertenece a la carrera indicada.");
-            continue;
-        }
-
-        // Solicitar la actividad deportiva y el semestre
-        let sportActivity = prompt("Ingrese la actividad deportiva deseada (Fútbol, Baloncesto, Natación, Tenis):");
-        let semester = parseInt(prompt("Ingrese el semestre:"));
-
-        // Validar si la actividad deportiva existe y si tiene cupos disponibles en el semestre indicado
-        let sport = sports[sportActivity];
-
-        if (!sport) {
-            console.log("La actividad deportiva ingresada no existe. Inténtelo de nuevo.");
-            continue;
-        }
-
-        if (sport.semester !== semester) {
-            console.log("La actividad deportiva seleccionada no está disponible para el semestre indicado.");
-            continue;
-        }
-
-        if (sport.availableSlots <= 0) {
-            console.log("No hay cupos disponibles para la actividad deportiva seleccionada.");
-            continue;
-        }
-
-        // Registrar al estudiante en la actividad deportiva
-        sport.availableSlots -= 1; // Reducir el número de cupos disponibles
-
-        // Mostrar mensaje de confirmación
-        console.log(`Registro exitoso. Estudiante ${studentCode} registrado en ${sportActivity}. Cupos restantes: ${sport.availableSlots}.`);
-
-        // Menú para salir del programa
-        let exit = prompt("Presione 's' para salir del programa o cualquier otra tecla para continuar:").toLowerCase();
-        if (exit === "s") {
-            break;
+function estaEnLista(elemento, lista) {
+    for (let i = 0; i < lista.length; i++) {
+        if (lista[i] === elemento) {
+            return true;
         }
     }
-
-    console.log("Gracias por utilizar el sistema de registro de créditos deportivos.");
+    return false;
 }
 
-// Llamada a la función principal para ejecutar el programa
-sportsRegistration();
+function registrarEstudiante(codigo, carrera, actividad, semestre) {
+    // Validar código de estudiante y carrera
+    if (!estaEnLista(codigo, estudiantes)) {
+        console.log('Código de estudiante no registrado.');
+        return;
+    }
+
+    if (!estaEnLista(carrera, carreras)) {
+        console.log('Carrera no válida.');
+        return;
+    }
+
+    // Validar semestre
+    if (semestre < 1 || semestre > 8) {
+        console.log('Semestre no válido. Debe estar entre 1 y 8.');
+        return;
+    }
+
+    if (!actividades[actividad]) {
+        console.log('Actividad deportiva no válida.');
+        return;
+    }
+
+    if (actividades[actividad].semestre !== semestre) {
+        console.log('Actividad no disponible en el semestre seleccionado.');
+        return;
+    }
+
+    if (actividades[actividad].cupos <= 0) {
+        console.log('No hay cupos disponibles para la actividad seleccionada.');
+        return;
+    }
+
+    actividades[actividad].cupos -= 1;
+    console.log(`Estudiante ${codigo} registrado en ${actividad} para el semestre ${semestre}.`);
+}
+
+const codigoEstudiante = prompt('Ingrese el código de estudiante:');
+const carreraEstudiante = prompt('Ingrese la carrera del estudiante (Ingeniería, Marketing Digital, Veterinaria, Medicina, Enfermería, Derecho):');
+const actividadDeseada = prompt('Ingrese la actividad deportiva deseada (Fútbol, Baloncesto, Volleyball):');
+const semestreEstudiante = parseInt(prompt('Ingrese el semestre (1-8):'), 10);
+
+registrarEstudiante(codigoEstudiante, carreraEstudiante, actividadDeseada, semestreEstudiante);
